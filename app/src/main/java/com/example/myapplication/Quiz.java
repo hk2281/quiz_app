@@ -1,5 +1,7 @@
 package com.example.myapplication;
 
+import android.util.Log;
+
 import java.util.List;
 
 public class Quiz {
@@ -9,6 +11,7 @@ public class Quiz {
     private int correctAnswerIndex;
 
     public Quiz(String question, List<String> options, int correctAnswerIndex) {
+
         this.question = question;
         this.options = options;
         this.correctAnswerIndex = correctAnswerIndex-1;
