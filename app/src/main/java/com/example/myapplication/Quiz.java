@@ -3,6 +3,7 @@ package com.example.myapplication;
 import java.util.List;
 
 public class Quiz {
+    //this class is used to store the question, options and correct answer index
     private String question;
     private List<String> options;
     private int correctAnswerIndex;

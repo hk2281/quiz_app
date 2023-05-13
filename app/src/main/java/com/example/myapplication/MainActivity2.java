@@ -24,12 +24,13 @@ public class MainActivity2 extends AppCompatActivity {
         setContentView(R.layout.activity_main2);
 
         tv_question = findViewById(R.id.tv_question);
-
+        
         btn_one = findViewById(R.id.btn_one);
         btn_2 = findViewById(R.id.btn_two);
         btn_3 = findViewById(R.id.btn_three);
         btn_4 = findViewById(R.id.btn_four);
 
+        //TODO: contain this in new class and call it from here
         options1.add("A) Option 1");
         options1.add("B) Option 2");
         options1.add("C) Option 3");
@@ -38,8 +39,18 @@ public class MainActivity2 extends AppCompatActivity {
         Quiz quiz1 = new Quiz("What is the capital of France?", options1, 1);
         quizzes.add(quiz1);
 
-        btn_one.setText(options1.get(0));
+        //this for loop set text for the buttons from the options list
+
+
 
         Log.d("quiz", String.valueOf(quizzes.get(0).getOptions()));
     }
+
+    private void nextQuestion() {
+        tv_question.setText(quizzes.get(0).getQuestion());
+        btn_one.setText(quizzes.get(0).getOptions().get(0));
+        btn_2.setText(quizzes.get(0).getOptions().get(1));
+        btn_3.setText(quizzes.get(0).getOptions().get(2));
+        btn_4.setText(quizzes.get(0).getOptions().get(3));
+
 }
