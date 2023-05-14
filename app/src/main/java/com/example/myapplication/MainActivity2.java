@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -12,7 +13,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity2 extends AppCompatActivity {
+public class MainActivity2 extends AppCompatActivity implements GetPlayerName.GetPlayerNameListener {
 
     public List<Quiz> quizzes;
 
@@ -22,9 +23,15 @@ public class MainActivity2 extends AppCompatActivity {
     private String answer;
     private  int index = 0;
     @Override
+    public void onFinishEditDialog(String inputText) {
+        Toast.makeText(this, "Hi, " + inputText, Toast.LENGTH_SHORT).show();
+    }
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+
+        showEditDialog();
 
         tv_question = findViewById(R.id.tv_question);
 
@@ -103,5 +110,11 @@ public class MainActivity2 extends AppCompatActivity {
         answer = quizzes.get(index).getCorrectAnswer();
         index = index<quizzes.size()-1? index+1: 0;
 
+    }
+
+    private void showEditDialog() {
+        FragmentManager fm = getSupportFragmentManager();
+        GetPlayerName getPlayerNameDialogFragment = GetPlayerName.newInstance("Some Title");
+        getPlayerNameDialogFragment.show(fm, "fragment_edit_name");
     }
 }
