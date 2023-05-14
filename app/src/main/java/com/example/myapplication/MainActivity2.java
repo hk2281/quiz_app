@@ -3,7 +3,11 @@ package com.example.myapplication;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.health.ServiceHealthStats;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -22,15 +26,25 @@ public class MainActivity2 extends AppCompatActivity implements GetPlayerName.Ge
 
     private String answer;
     private  int index = 0;
+
+    private SharedPreferences context;
+    SharedPreferences.Editor ed;
+
+    public static NameDataHolder newNames = new NameDataHolder();
     @Override
     public void onFinishEditDialog(String inputText) {
+        Log.d("fa","finisheditdialog foo");
+
+        ed.putString("name", inputText);
+        ed.apply();
         Toast.makeText(this, "Hi, " + inputText, Toast.LENGTH_SHORT).show();
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
-
+        context = getSharedPreferences("storage",Context.MODE_PRIVATE);
+        ed = context.edit();
         showEditDialog();
 
         tv_question = findViewById(R.id.tv_question);
