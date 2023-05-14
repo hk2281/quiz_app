@@ -26,7 +26,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/score"
+            android:id="@+id/score_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="score"
@@ -37,7 +37,7 @@
             android:layout_marginTop="16dp"/>
 
         <Button
-            android:id="@+id/exit"
+            android:id="@+id/exit_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="exit"

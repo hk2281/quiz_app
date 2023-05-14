@@ -12,6 +12,7 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
     private Button button;
+    private Button score_btn;
 
 
     private SharedPreferences sharedPrefs;
@@ -23,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         button = findViewById(R.id.button);
+        score_btn = findViewById(R.id.score_btn);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -30,7 +32,20 @@ public class MainActivity extends AppCompatActivity {
                 openActivitiTwo();
             }
         });
+
+        score_btn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                openScoreActivity();
+            }
+        });
     }
+
+    public void openScoreActivity() {
+        Intent intent = new Intent(this, ScoreActivity.class);
+        startActivity(intent);
+    }
+
     @Override
     protected void onResume(){
         super.onResume();
