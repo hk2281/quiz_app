@@ -25,7 +25,7 @@ public class StateAdapter extends RecyclerView.Adapter<StateAdapter.ViewHolder> 
 
     @Override
     public StateAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
+        Log.d("fa","onCreate view holde ");
         View view = inflater.inflate(R.layout.list_item, parent, false);
         return new ViewHolder(view);
     }
@@ -49,6 +49,7 @@ public class StateAdapter extends RecyclerView.Adapter<StateAdapter.ViewHolder> 
         final TextView nameView, scoreView;
         ViewHolder(View view){
             super(view);
+            Log.d("fa","in view Holder");
             flagView = view.findViewById(R.id.flag);
             nameView = view.findViewById(R.id.playerName);
             scoreView = view.findViewById(R.id.playerScore);
