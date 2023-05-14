@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.health.ServiceHealthStats;
@@ -54,14 +55,13 @@ public class MainActivity2 extends AppCompatActivity implements GetPlayerName.Ge
         btn_3 = findViewById(R.id.btn_three);
         btn_4 = findViewById(R.id.btn_four);
 
-        //TODO: contain this in new class and call it from here
 
         DatabaseQuizFactory questionFactory = new DatabaseQuizFactory();
         QuizManager questionManager = new QuizManager(questionFactory);
         quizzes = questionManager.createQuizFromDatabase();
 //        this for loop set text for the buttons from the options list
 
-        nextQuestion();
+        nextQuestion(index);
 
         btn_one.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,10 +70,13 @@ public class MainActivity2 extends AppCompatActivity implements GetPlayerName.Ge
                 if(btn_one.getText() == answer){
                     Log.d("fa", String.valueOf(btn_one.getText()));
                     Toast.makeText(MainActivity2.this, "You Are Correct", Toast.LENGTH_SHORT).show();
-                    nextQuestion();
+                    index = index<=quizzes.size()-1? index+1: 0;
+                    nextQuestion(index);
                 }
                 else {
                     Toast.makeText(MainActivity2.this, "You Gay", Toast.LENGTH_SHORT).show();
+                    setCurrentScore(index);
+                    returnToMainActivity();
                 }
             }
         });
@@ -82,10 +85,13 @@ public class MainActivity2 extends AppCompatActivity implements GetPlayerName.Ge
             public void onClick(View view) {
                 if(btn_2.getText() == answer){
                     Log.d("fa", String.valueOf(btn_2.getText()));
-                    nextQuestion();
+                    index = index<=quizzes.size()-1? index+1: 0;
+                    nextQuestion(index);
                 }
                 else {
                     Toast.makeText(MainActivity2.this, "You Gay", Toast.LENGTH_SHORT).show();
+                    setCurrentScore(index);
+                    returnToMainActivity();
                 }
             }
         });
@@ -94,10 +100,13 @@ public class MainActivity2 extends AppCompatActivity implements GetPlayerName.Ge
             public void onClick(View view) {
                 if(btn_3.getText() == answer){
                     Log.d("fa", String.valueOf(btn_3.getText()));
-                    nextQuestion();
+                    index = index<=quizzes.size()-1? index+1: 0;
+                    nextQuestion(index);
                 }
                 else {
                     Toast.makeText(MainActivity2.this, "You Gay", Toast.LENGTH_SHORT).show();
+                    setCurrentScore(index);
+                    returnToMainActivity();
                 }
             }
         });
@@ -106,23 +115,31 @@ public class MainActivity2 extends AppCompatActivity implements GetPlayerName.Ge
             public void onClick(View view) {
                 if(btn_4.getText() == answer){
                     Log.d("fa", String.valueOf(btn_4.getText()));
-                    nextQuestion();
+                    index = index<=quizzes.size()-1? index+1: 0;
+                    nextQuestion(index);
                 }
                 else {
                     Toast.makeText(MainActivity2.this, "You Gay", Toast.LENGTH_SHORT).show();
+                    setCurrentScore(index);
+                    returnToMainActivity();
                 }
             }
         });
     }
-    private void nextQuestion() {
+    private void nextQuestion(int question) {
 
-        tv_question.setText(quizzes.get(index).getQuestion());
-        btn_one.setText(quizzes.get(index).getOptions().get(0));
-        btn_2.setText(quizzes.get(index).getOptions().get(1));
-        btn_3.setText(quizzes.get(index).getOptions().get(2));
-        btn_4.setText(quizzes.get(index).getOptions().get(3));
-        answer = quizzes.get(index).getCorrectAnswer();
-        index = index<quizzes.size()-1? index+1: 0;
+        if(question==quizzes.size()){
+            setCurrentScore(question);
+            showWinScreenFragment();
+        }
+        else {
+            tv_question.setText(quizzes.get(question).getQuestion());
+            btn_one.setText(quizzes.get(question).getOptions().get(0));
+            btn_2.setText(quizzes.get(question).getOptions().get(1));
+            btn_3.setText(quizzes.get(question).getOptions().get(2));
+            btn_4.setText(quizzes.get(question).getOptions().get(3));
+            answer = quizzes.get(question).getCorrectAnswer();
+        }
 
     }
 
@@ -131,4 +148,23 @@ public class MainActivity2 extends AppCompatActivity implements GetPlayerName.Ge
         GetPlayerName getPlayerNameDialogFragment = GetPlayerName.newInstance("Some Title");
         getPlayerNameDialogFragment.show(fm, "fragment_edit_name");
     }
+
+    private void showWinScreenFragment() {
+        FragmentManager fm = getSupportFragmentManager();
+        WinScreen alertDialog = WinScreen.newInstance("you Win");
+        alertDialog.show(fm, "fragment_alert");
+    }
+
+    public void returnToMainActivity(){
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
+
+    public void setCurrentScore(int score){
+        ed.putInt("score",score);
+        ed.apply();
+    }
+
+
 }

@@ -32,12 +32,13 @@ public class MainActivity extends AppCompatActivity {
         });
     }
     @Override
-    protected void onRestart(){
-        super.onRestart();
+    protected void onResume(){
+        super.onResume();
         sharedPrefs = getSharedPreferences("storage", Context.MODE_PRIVATE);
 
 //        NameDataHolder getName = new NameDataHolder();
         Log.d("fa", sharedPrefs.getString("name",""));
+        Log.d("fa",String.valueOf(sharedPrefs.getInt("score", 0)));
     }
 
     public void openActivitiTwo(){
