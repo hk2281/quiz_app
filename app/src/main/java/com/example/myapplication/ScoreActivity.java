@@ -18,16 +18,6 @@ public class ScoreActivity extends AppCompatActivity {
 
 
         setInitialData();
-        Log.d("fa","Score act on create");
-        RecyclerView recyclerView = findViewById(R.id.listInActivityScore);
-        StateAdapter adapter = new StateAdapter(this, states);
-        try{
-            Log.d("fa","try");
-            recyclerView.setAdapter(adapter);
-        }
-        catch (Exception e){
-            Log.d("fa",e.getMessage());
-        }
 
 
 
