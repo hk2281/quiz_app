@@ -10,9 +10,17 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.firebase.database.DatabaseReference;
+
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
     private Button button;
     private Button score_btn;
+
+    private Button exit_btn;
+
+    private Long vl;
 
 
     private SharedPreferences sharedPrefs;
@@ -25,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
         button = findViewById(R.id.button);
         score_btn = findViewById(R.id.score_btn);
+        exit_btn = findViewById(R.id.exit_btn);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -37,6 +46,25 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view){
                 openScoreActivity();
+            }
+        });
+
+        exit_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                databaseConnection newConnection = new databaseConnection();
+                ArrayList<Player> pl= new ArrayList<Player>();
+
+//                newConnection.postToDb(new Player("gogs","1"));
+
+
+                newConnection.getcollectionCount(new databaseConnection.Mycolback(){
+                    @Override
+                    public  void  onComplet(){
+                        Log.d("ff","f");
+                    }
+                });
+//                newConnection.getFromDb();
             }
         });
     }
