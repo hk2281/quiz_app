@@ -29,6 +29,7 @@ public class MainActivity2 extends AppCompatActivity implements GetPlayerName.Ge
     private  int index = 0;
 
     private SharedPreferences context;
+    private SharedPreferences sharedPrefs;
     SharedPreferences.Editor ed;
 
     public static NameDataHolder newNames = new NameDataHolder();
@@ -56,12 +57,22 @@ public class MainActivity2 extends AppCompatActivity implements GetPlayerName.Ge
         btn_4 = findViewById(R.id.btn_four);
 
 
-        DatabaseQuizFactory questionFactory = new DatabaseQuizFactory();
-        QuizManager questionManager = new QuizManager(questionFactory);
-        quizzes = questionManager.createQuizFromDatabase();
+        databaseConnection getQuestionCon = new databaseConnection();
+
+        getQuestionCon.getQuestion(new databaseConnection.QuestionCallback() {
+            @Override
+            public void onGetQuestion(List<Quiz> docSnap) {
+                quizzes = docSnap;
+                nextQuestion(index);
+            }
+        });
+
+//        DatabaseQuizFactory questionFactory = new DatabaseQuizFactory();
+//        QuizManager questionManager = new QuizManager(questionFactory);
+//        quizzes = questionManager.createQuizFromDatabase();
 //        this for loop set text for the buttons from the options list
 
-        nextQuestion(index);
+
 
         btn_one.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,7 +95,7 @@ public class MainActivity2 extends AppCompatActivity implements GetPlayerName.Ge
             @Override
             public void onClick(View view) {
                 if(btn_2.getText() == answer){
-                    Log.d("fa", String.valueOf(btn_2.getText()));
+                    Toast.makeText(MainActivity2.this, "You Are Correct", Toast.LENGTH_SHORT).show();
                     index = index<=quizzes.size()-1? index+1: 0;
                     nextQuestion(index);
                 }
@@ -99,7 +110,7 @@ public class MainActivity2 extends AppCompatActivity implements GetPlayerName.Ge
             @Override
             public void onClick(View view) {
                 if(btn_3.getText() == answer){
-                    Log.d("fa", String.valueOf(btn_3.getText()));
+                    Toast.makeText(MainActivity2.this, "You Are Correct", Toast.LENGTH_SHORT).show();
                     index = index<=quizzes.size()-1? index+1: 0;
                     nextQuestion(index);
                 }
@@ -114,7 +125,7 @@ public class MainActivity2 extends AppCompatActivity implements GetPlayerName.Ge
             @Override
             public void onClick(View view) {
                 if(btn_4.getText() == answer){
-                    Log.d("fa", String.valueOf(btn_4.getText()));
+                    Toast.makeText(MainActivity2.this, "You Are Correct", Toast.LENGTH_SHORT).show();
                     index = index<=quizzes.size()-1? index+1: 0;
                     nextQuestion(index);
                 }
@@ -156,6 +167,14 @@ public class MainActivity2 extends AppCompatActivity implements GetPlayerName.Ge
     }
 
     public void returnToMainActivity(){
+        sharedPrefs = getSharedPreferences("storage", Context.MODE_PRIVATE);
+
+//        NameDataHolder getName = new NameDataHolder();
+        Log.d("fa", sharedPrefs.getString("name",""));
+        Log.d("fa",String.valueOf(sharedPrefs.getInt("score", 0)));
+        sendToDbCurrentPlayerSession(
+                sharedPrefs.getString("name",""),
+                String.valueOf(sharedPrefs.getInt("score", 0)));
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
@@ -164,6 +183,21 @@ public class MainActivity2 extends AppCompatActivity implements GetPlayerName.Ge
     public void setCurrentScore(int score){
         ed.putInt("score",score);
         ed.apply();
+    }
+
+    public void sendToDbCurrentPlayerSession(String playerName, String score){
+        databaseConnection forGetCount = new databaseConnection();
+        databaseConnection forPostData = new databaseConnection();
+        forGetCount.getcollectionCount(new databaseConnection.MyCallback(){
+            @Override
+            public  void  onComplete(long count){
+                Log.d("ff", String.valueOf(count));
+                forPostData.postToDb(new Player(playerName,score,count));
+            }
+            @Override
+            public void onGetPlayerScore(ArrayList<State> data){}
+        });
+
     }
 
 
