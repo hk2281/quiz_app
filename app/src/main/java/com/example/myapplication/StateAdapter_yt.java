@@ -11,10 +11,11 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class StateAdapter_yt extends RecyclerView.Adapter<StateAdapter_yt.StateViewHolder>{
 
-    private ArrayList<State> mStateList;
+    private LinkedList<State> mStateList;
     public Context  context;
     public static class StateViewHolder extends RecyclerView.ViewHolder {
         public ImageView mImageView;
@@ -31,7 +32,7 @@ public class StateAdapter_yt extends RecyclerView.Adapter<StateAdapter_yt.StateV
         }
     }
 
-    public StateAdapter_yt(Context context, ArrayList<State> mStateList) {
+    public StateAdapter_yt(Context context, LinkedList<State> mStateList) {
         this.mStateList = mStateList;
         this.context = context;
     }

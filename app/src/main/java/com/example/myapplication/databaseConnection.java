@@ -24,6 +24,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class databaseConnection {
@@ -31,9 +32,14 @@ public class databaseConnection {
     public DatabaseReference dbRef;
     public long collectionSize;
 
-    public interface Mycolback{
+    public interface MyCallback{
 
-        void onComplet();
+        void onComplete(long data);
+        void onGetPlayerScore(ArrayList<State> playerScoreStateList);
+    }
+
+    public interface QuestionCallback{
+        void onGetQuestion(List<Quiz>  docSnap);
     }
 
     public void postToDb(Player currentPlayer) {
@@ -55,51 +61,60 @@ public class databaseConnection {
         }
 
     }
-    public long  getcollectionCount(Mycolback callback){
+    public long  getcollectionCount(MyCallback callback){
+        try {
+            CollectionReference colRef;
+            database = FirebaseFirestore.getInstance();
+            Query query = database.collection("Player");
+            AggregateQuery countQuery = query.count();
+            Log.d("fa", "yes");
+            countQuery.get(AggregateSource.SERVER).addOnCompleteListener(new OnCompleteListener<AggregateQuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<AggregateQuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        // Count fetched successfully
+                        Log.d("fa", "yes");
+                        AggregateQuerySnapshot snapshot = task.getResult();
 
-        CollectionReference colRef;
-        database = FirebaseFirestore.getInstance();
-        Query query = database.collection("Player");
-        AggregateQuery countQuery = query.count();
-        Log.d("fa", "yes");
-        countQuery.get(AggregateSource.SERVER).addOnCompleteListener(new OnCompleteListener<AggregateQuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<AggregateQuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    // Count fetched successfully
-                    Log.d("fa", "yes");
-                    AggregateQuerySnapshot snapshot = task.getResult();
-
-                    Log.d("ff", "Count: " + snapshot.getCount());
-                    collectionSize = snapshot.getCount();
-                    callback.onComplet();
-                } else {
-                    Log.d("ff", "Count failed: ", task.getException());
+                        Log.d("ff", "Count: " + snapshot.getCount());
+                        collectionSize = snapshot.getCount();
+                        callback.onComplete(collectionSize);
+                    } else {
+                        Log.d("ff", "Count failed: ", task.getException());
+                    }
                 }
-            }
-        });
-        return collectionSize;
+            });
+            return collectionSize;
 
+        }
+        catch (Exception e){
+            Log.d("fa", e.getMessage());
+            return 0;
+        }
     }
 
-    public void getFromDb() {
+    public void getFromDb(MyCallback callback) {
         try {
             CollectionReference colRef;
             database = FirebaseFirestore.getInstance();
             colRef = database.collection("Player");
-            Log.d("fa", "inpost");
-            Query query = colRef.limitToLast(2).orderBy("score");
+            Query query = colRef.limitToLast(10).orderBy("count_id");
             query
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
 
+                            if (task.isSuccessful()) {
+                                ArrayList<State> LastPlayerScoreStateList = new ArrayList<State>();
                                 for (QueryDocumentSnapshot docum : task.getResult()) {
-//                                    Map<String, Object> map = (Map<String, Object>) docum.get("map_value");
-                                    Log.d("fa", docum.toObject(Player.class).getPlName());
+                                    LastPlayerScoreStateList
+                                            .add(new State(
+                                                    docum.toObject(Player.class).getPlName(),
+                                                    docum.toObject(Player.class).getScore(),
+                                                    R.drawable.flag));
                                 }
+                                callback.onGetPlayerScore(LastPlayerScoreStateList);
                             } else {
                                 Log.d("fa", "Error getting documents: ", task.getException());
                             }
@@ -108,9 +123,46 @@ public class databaseConnection {
 
 
         } catch (Exception e) {
-            Log.d("fa", e.getMessage());
+            Log.e("fa", e.getMessage());
         }
 
 
+    }
+
+    public void getQuestion(QuestionCallback callback){
+        try{
+            database = FirebaseFirestore.getInstance();
+            database.collection("questions")
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if(task.isSuccessful()){
+                                ArrayList<Map<String,Object>> questionsMapList = new ArrayList<Map<String,Object>>();
+                                ArrayList<Quiz> allQuestion = new ArrayList<Quiz>();
+                                for(QueryDocumentSnapshot documentSnapshot: task.getResult()){
+                                    List<String> option = new ArrayList<>();
+
+                                    option.add(documentSnapshot.getData().get("1").toString());
+                                    option.add(documentSnapshot.getData().get("2").toString());
+                                    option.add(documentSnapshot.getData().get("3").toString());
+                                    option.add(documentSnapshot.getData().get("4").toString());
+                                    Long indexCorrectAnswer = (Long) documentSnapshot.getData().get("correct_answ");
+                                    String question = documentSnapshot.getData().get("question").toString();
+                                    Log.d("fa",String.valueOf(documentSnapshot.getData().get("1")));
+                                    Quiz oneQuiz = new Quiz(question,option,indexCorrectAnswer.intValue());
+                                    allQuestion.add(oneQuiz);
+                                }
+                                callback.onGetQuestion(allQuestion);
+                            }else {
+                                Log.e("fa","error: ", task.getException());
+                            }
+                        }
+                    });
+
+        }
+        catch (Exception e){
+            Log.e("fa", e.getMessage());
+        }
     }
 }
