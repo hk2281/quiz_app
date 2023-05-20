@@ -85,7 +85,7 @@ public class MainActivity2 extends AppCompatActivity implements GetPlayerName.Ge
                     nextQuestion(index);
                 }
                 else {
-                    Toast.makeText(MainActivity2.this, "You Gay", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity2.this, "You is lose", Toast.LENGTH_SHORT).show();
                     setCurrentScore(index);
                     returnToMainActivity();
                 }
@@ -100,7 +100,7 @@ public class MainActivity2 extends AppCompatActivity implements GetPlayerName.Ge
                     nextQuestion(index);
                 }
                 else {
-                    Toast.makeText(MainActivity2.this, "You Gay", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity2.this, "You is lose", Toast.LENGTH_SHORT).show();
                     setCurrentScore(index);
                     returnToMainActivity();
                 }
@@ -115,7 +115,7 @@ public class MainActivity2 extends AppCompatActivity implements GetPlayerName.Ge
                     nextQuestion(index);
                 }
                 else {
-                    Toast.makeText(MainActivity2.this, "You Gay", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity2.this, "You is lose", Toast.LENGTH_SHORT).show();
                     setCurrentScore(index);
                     returnToMainActivity();
                 }
@@ -130,7 +130,7 @@ public class MainActivity2 extends AppCompatActivity implements GetPlayerName.Ge
                     nextQuestion(index);
                 }
                 else {
-                    Toast.makeText(MainActivity2.this, "You Gay", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity2.this, "You is lose", Toast.LENGTH_SHORT).show();
                     setCurrentScore(index);
                     returnToMainActivity();
                 }
